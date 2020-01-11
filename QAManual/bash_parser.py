@@ -1,7 +1,6 @@
 """
-基础解析器
+ 内置基础解析器
 """
-import re
 import inspect
 import typing
 import types
@@ -36,7 +35,7 @@ class Parser:
     def code_file(self):
         return inspect.getsourcefile(self.union)
 
-    def _parse(self):
+    def parse(self):
         """
         重写此方法来执行解析结构
         :return:
@@ -46,13 +45,13 @@ class Parser:
     def get_node(self):
         """
         获得结构化的数据"""
-        return doc_node(name=self.union.__name__, doc=self._parse(), code_source=self.code_source,
+        return doc_node(name=self.union.__name__, doc=self.parse(), code_source=self.code_source,
                         code_file=self.code_file)
 
 
 class FunctionParser(Parser):
 
-    def _parse(self) -> typing.Mapping or None:
+    def parse(self) -> typing.Mapping or None:
         return [x for x in self.doc.split("\n\n")]
 
 
@@ -60,3 +59,6 @@ class ClassParser(Parser):
     """
     注意需要对子代方法进行解析
     """
+
+    def parse(self):
+        pass

@@ -1,7 +1,6 @@
 import re
 import typing
 from collections import namedtuple
-from typing import Tuple
 
 
 class Doc:
@@ -24,15 +23,12 @@ class Doc:
 
         self._next_()
 
-    def _next_(self):
+    def _next_(self) -> None:
         for x in self.node.doc:
             for key in self.mapping.keys():
                 if key in x:
                     value = re.sub(f"{key}(.*)", lambda x: x.group(1), x)
-                    print(self.mapping[key], value)
+                    setattr(self, self.mapping[key], value)
                 else:
                     continue
-        else:
-            print("循环结束")
-
         self.name = self.node.name

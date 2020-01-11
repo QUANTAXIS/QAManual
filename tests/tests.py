@@ -1,7 +1,7 @@
 import re
 
-from man.bash_parser import FunctionParser
-from man.writer import MarkdownWriter
+from QAManual import FunctionParser
+from QAManual import MarkdownWriter
 
 
 def QA_util_code_adjust_ctp(code, source):
@@ -46,3 +46,4 @@ def QA_util_code_adjust_ctp(code, source):
 
 parser = FunctionParser(QA_util_code_adjust_ctp)
 writer = MarkdownWriter("Hello", parser.get_node())
+writer.handle()
