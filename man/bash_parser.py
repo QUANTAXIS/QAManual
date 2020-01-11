@@ -51,7 +51,7 @@ def QA_util_code_adjust_ctp(code, source):
             return re.search(r'[a-zA-z]+', code)[0].lower() + re.search(r'[0-9]+', code)[0]
 
 
-class DocParser:
+class Parser:
 
     def __init__(self, destination):
         if isinstance(destination, types.FunctionType):
@@ -89,7 +89,7 @@ class DocParser:
         return doc_node(doc=self._parse(), code_source=self.code_source, code_file=self.code_file)
 
 
-class FunctionParser(DocParser):
+class FunctionParser(Parser):
 
     def _parse(self) -> typing.Mapping or None:
         result = []
@@ -101,6 +101,12 @@ class FunctionParser(DocParser):
             else:
                 content += x
         return result
+
+
+class ClassParser(Parser):
+    """
+    注意需要对子代方法进行解析
+    """
 
 
 if __name__ == '__main__':
