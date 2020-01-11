@@ -2,9 +2,13 @@
 基础解析器
 """
 import re
-import struct
+import inspect
 import typing
 import types
+
+from collections import namedtuple
+
+doc_node = namedtuple("code_node", ["code_source", "code_file", "doc"])
 
 
 def QA_util_code_adjust_ctp(code, source):
@@ -64,23 +68,42 @@ class DocParser:
             return None
         return self.union.__doc__
 
+    @property
+    def code_source(self):
+        return "".join(inspect.getsourcelines(self.union)[0])
+
+    @property
+    def code_file(self):
+        return inspect.getsourcefile(self.union)
+
     def _parse(self):
+        """
+        重写此方法来执行解析结构
+        :return:
+        """
         raise NotImplemented
 
-    def get_struct(self):
+    def get_node(self):
         """
         获得结构化的数据"""
-        return self._parse()
+        return doc_node(doc=self._parse(), code_source=self.code_source, code_file=self.code_file)
 
 
 class FunctionParser(DocParser):
 
     def _parse(self) -> typing.Mapping or None:
-        # todo: 很牛逼的正则 能够自适应匹配
-        primary_patter = r".*\u7528\u9014:(.*)\n\u53c2\u6570(.*).*"
-        p = re.match(primary_patter, self.doc)
-        print(p)
+        result = []
+        content = ""
+        for x in self.doc.split("\n"):
+            if x == "":
+                result.append(content)
+                content = ""
+            else:
+                content += x
+        return result
 
 
-a = FunctionParser(QA_util_code_adjust_ctp)
-a.get_struct()
+if __name__ == '__main__':
+    a = FunctionParser(QA_util_code_adjust_ctp)
+    p = a.get_node()
+    print(p.code_file)
