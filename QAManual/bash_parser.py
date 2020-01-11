@@ -29,22 +29,22 @@ class Parser:
 
     @property
     def code_source(self):
-        return "".join(inspect.getsourcelines(self.union)[0])
+        try:
+            return inspect.getsource(self.union)
+        except OSError:
+            return " "
 
     @property
     def code_file(self):
-        return inspect.getsourcefile(self.union)
+        p = inspect.getsourcefile(self.union)
+        return p
 
     def parse(self):
-        """
-        重写此方法来执行解析结构
-        :return:
-        """
+        """override this method to perform parsing structure"""
         raise NotImplemented
 
     def get_node(self):
-        """
-        获得结构化的数据"""
+        """get structured data"""
         return doc_node(name=self.union.__name__, doc=self.parse(), code_source=self.code_source,
                         code_file=self.code_file)
 
@@ -56,9 +56,24 @@ class FunctionParser(Parser):
 
 
 class ClassParser(Parser):
-    """
-    注意需要对子代方法进行解析
-    """
-
     def parse(self):
         pass
+
+
+class ParamsParser:
+    """ format for parameters """
+
+    def __init__(self, source):
+        self.source = source
+
+        self._next_()
+
+    def _next_(self):
+        """ parse parameters and generate structure """
+        default = {
+            "meaning": ""
+        }
+        for single_params in self.source.split("*"):
+            pass
+
+

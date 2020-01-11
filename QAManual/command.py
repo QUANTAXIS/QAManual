@@ -8,3 +8,8 @@ class QASearch:
 
     def __init__(self):
         pass
+
+    def search(self):
+        """
+        search command
+        """
