@@ -2,11 +2,14 @@
 写入markdown模块
 注意你需要使用标记
 """
+from man.doc_parse import Doc
 
 
 class Writer:
-    def __init__(self, filename):
+    def __init__(self, filename, node):
         self.filename = filename
+        self.node = node
+        self.doc_result = Doc(node)
 
     def write(self, content):
         """重写此方法来构建提一个Md"""
@@ -37,12 +40,16 @@ class Writer:
 
     def demonstrate_writer(self):
         """ 运行示例 """
+        raise NotImplemented
 
 
 class MarkdownWriter(Writer):
     """
     markdown 文档写入器
     """
+
+    def params_writer(self):
+        pass
 
 
 class RstWriter(Writer):
