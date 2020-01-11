@@ -1,0 +1,6 @@
+README.md
+setup.py
+QAManual.egg-info/PKG-INFO
+QAManual.egg-info/SOURCES.txt
+QAManual.egg-info/dependency_links.txt
+QAManual.egg-info/top_level.txt
