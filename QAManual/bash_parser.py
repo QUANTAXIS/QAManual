@@ -2,10 +2,13 @@
  内置基础解析器
 """
 import inspect
+import re
 import typing
 import types
-
+from copy import deepcopy
 from collections import namedtuple
+
+from QAManual.c import meaning, get_key
 
 doc_node = namedtuple("code_node", ["name", "code_source", "code_file", "doc"])
 
@@ -63,17 +66,31 @@ class ClassParser(Parser):
 class ParamsParser:
     """ format for parameters """
 
-    def __init__(self, source):
+    def __init__(self, source: str, language: str):
         self.source = source
-
-        self._next_()
+        self.lng = language
+        self.name = set()
+        self.attr = self._next_()
 
     def _next_(self):
         """ parse parameters and generate structure """
-        default = {
-            "meaning": ""
-        }
-        for single_params in self.source.split("*"):
-            pass
-
-
+        rtemp = re.split("(\*\s\w+\s\->)", self.source)
+        result = {}
+        for ink in range(len(rtemp)):
+            element = rtemp[ink]
+            if re.match("\*\s\w+\s\->", element) is not None:
+                next_element = rtemp[ink + 1]
+                temp_element = deepcopy(next_element)
+                self.attr_name = re.match("^\*\s(\w+)\s\->", element).group(1)
+                for val in meaning[self.lng]['level_sec'].values():
+                    key = get_key(meaning[self.lng]['level_sec'], val)
+                    self.name.add(key)
+                    if val in temp_element:
+                        pattern = re.compile("^\n[\w\W]*" + f"{val}:" + r"[\s]?(.*?)\n")
+                        # Add a newline manually to ensure that the last line can be matched
+                        c = pattern.match(temp_element + "\n")
+                        if c:
+                            result.setdefault(self.attr_name, {})[key] = c.group(1)
+            else:
+                continue
+        return result

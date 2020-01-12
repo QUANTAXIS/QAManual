@@ -4,15 +4,19 @@
 """
 import sys
 
+from QAManual.bash_parser import ParamsParser
 from QAManual.doc_parse import Doc
-from QAManual.c import mapping
+from QAManual.c import meaning
 
 
 class Writer:
+    exc = ""
+
     def __init__(self, filename, node, language="zh"):
         self.filename = filename + ".md"
         self.node = node
         self.doc_result = Doc(node, language)
+        self.params = ParamsParser(self.doc_result.params, language)
         self.lng = language
 
     def write(self, content):
@@ -88,23 +92,39 @@ class MarkdownWriter(Writer):
 
     def output_writer(self):
         self.write(
-            f"{mapping[self.lng]['level_mean']['output']}" + "\n" + "```\n" + self.trim(
+            f"{meaning[self.lng]['level_mean']['output']}" + "\n" + "```\n" + self.trim(
                 self.doc_result.output) + "\n```" + "\n")
 
     def demonstrate_writer(self):
-        self.write(f"**{mapping[self.lng]['level_mean']['demonstrate']}**" + "\n" + "```\n" + self.trim(
+        self.write(f"**{meaning[self.lng]['level_mean']['demonstrate']}**" + "\n" + "```\n" + self.trim(
             self.doc_result.demonstrate) + "\n```" + "\n")
 
     def params_writer(self):
-        pass
+        length = len(self.params.name)
+
+        def generate_header():
+            """ generate doc header of the markdown table"""
+            return "| Attr | " + " |".join(self.params.name) + "| \n" + "|" + "|".join(
+                [":----:" for x in range(length + 1)]) + "|\n"
+
+        header = "**Attr Table**\n\n" + generate_header()
+        body = ""
+        for key, value in self.params.attr.items():
+            body += ("|" + key)
+            for x in self.params.name:
+                body += "|" + self.params.attr[key][x]
+            body += "|\n"
+        end = "\n" + header + body + "\n"
+        self.write(end)
 
     def path_writer(self):
-        self.write(f"{mapping[self.lng]['level_mean']['path']}: {self.node.code_file}`" + "\n")
+        self.write(f"{meaning[self.lng]['level_mean']['path']}: `{self.node.code_file}`" + "\n")
 
     def handle(self, code=False):
         self.name_writer()
         self.path_writer()
         self.explanation_writer()
+        self.params_writer()
         self.demonstrate_writer()
         self.output_writer()
         if code:

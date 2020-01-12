@@ -1,8 +1,8 @@
 """
-需要支持中文和英文两种注解生成
+需要支持中文和英文两种注解生成. 支持更多语言
 """
 
-mapping = {
+meaning = {
     "zh":
         {
             "level_pri":
@@ -16,7 +16,7 @@ mapping = {
                 {
                     "meaning": "含义",
                     "type": "类型",
-                    "optional_value": "可选值"
+                    "optional_value": "参数支持"
                 },
             "level_mean":
                 {
@@ -53,3 +53,11 @@ mapping = {
         },
 
 }
+
+
+def get_key(obj, value):
+    for key, val in obj.items():
+        if val == value:
+            return key
+    else:
+        return None

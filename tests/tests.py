@@ -36,11 +36,11 @@ def QA_util_code_adjust_ctp(code, source):
         此函数用于在ctp和通达信之间来回转换
 
     params:
-        * code:
+        * code ->
             含义: 合约代码
             类型: str
             参数支持: []
-        * source:
+        * source ->
             含义: 需要转换到的目标
             类型: str
             参数支持: ["pytdx", "ctp"]
@@ -71,6 +71,7 @@ def QA_util_code_adjust_ctp(code, source):
             return re.search(r'[a-zA-z]+', code)[0].lower() + re.search(r'[0-9]+', code)[0]
 
 
-parser = FunctionParser(QA_util_code_adjust_ctp)
-writer = MarkdownWriter(parser.union.__name__, parser.get_node(), language="en")
-writer.handle()
+if __name__ == '__main__':
+    parser = FunctionParser(QA_util_code_adjust_ctp)
+    writer = MarkdownWriter(parser.union.__name__, parser.get_node(), language="zh")
+    writer.handle()
