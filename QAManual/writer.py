@@ -112,7 +112,7 @@ class MarkdownWriter(Writer):
         for key, value in self.params.attr.items():
             body += ("|" + key)
             for x in self.params.name:
-                body += "|" + self.params.attr[key][x]
+                body += "|" + str(self.params.attr[key].get(x, None))
             body += "|\n"
         end = "\n" + header + body + "\n"
         self.write(end)

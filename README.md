@@ -1,19 +1,24 @@
 # QAManual
-Python Man手册 自动生成程序
-注意你需要按照指定的格式来添加
+Python Manual Auto Generate Program,
 
-### 两个目的
+Note that you need to add in the specified format
 
-- 生成手册文档
-- 命令快捷搜索
+> Hate writing documents 
 
-### todo
-- 按照指定模板
-- 解析多个模板(好难)
-- 构建搜索命令(算法能教我吗)
+### Two purposes
+
+- Generate manual documents
+- Command quick search
+
+### Todo
+- According to the specified template
+- Build search command ( Can you  teach me algorithm )
 
 
-###  已经完成
-- 结构化
-- 生成文档 
-- 中英文支持(仅支持单个)
+###  Finished
+- Structured
+- Generate documentation 
+- Chinese and English support(Only supports a single)
+
+
+Author: [somewheve](https://github.com/somewheve)
