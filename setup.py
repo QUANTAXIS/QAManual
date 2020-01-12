@@ -4,5 +4,9 @@ setup(
     name="QAManual",
     author="somewheve",
     version="0.1",
-    package=find_packages(),
+    packages=find_packages(),
+    entry_points={
+        'console_scripts': ['qaman=QAManual.command:main'],
+    }
+
 )
