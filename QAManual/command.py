@@ -33,9 +33,9 @@ class QAMan:
         env = {}
         for key, value in locals().items():
             env[key] = value
+        cwd = os.getcwd()
         if args.init == ".":
-            p = os.getcwd()
-            file_path = os.path.join(p, "__init__.py")
+            file_path = os.path.join(cwd, "__init__.py")
         else:
             file_path = os.path.join(args.abspath, "__init__.py")
         if not os.path.exists(file_path):
@@ -52,7 +52,7 @@ class QAMan:
                 if inspect.isfunction(v):
                     """ Processing function """
                     parse = FunctionParser(v)
-                    writer = MarkdownWriter(parse.union.__name__, parse.get_node(), language="zh")
+                    writer = MarkdownWriter(parse.get_node(), cwd, path=args.output, language="zh")
                     writer.handle()
                 elif inspect.isclass(v):
                     """ Processing class """

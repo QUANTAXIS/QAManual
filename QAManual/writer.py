@@ -2,6 +2,8 @@
 写入markdown模块
 注意你需要使用标记
 """
+import os
+import re
 import sys
 
 from QAManual.bash_parser import ParamsParser
@@ -12,11 +14,30 @@ from QAManual.c import meaning
 class Writer:
     exc = ""
 
-    def __init__(self, filename, node, language="zh"):
-        self.filename = filename + ".md"
+    def __init__(self, node, cwd=os.getcwd(), path=None, language="zh"):
+        self.cwd = cwd
         self.node = node
         self.doc_result = Doc(node, language)
         self.params = ParamsParser(self.doc_result.params, language)
+        # source code file path
+        code_filepath = self.node.code_file
+        file_name = code_filepath.replace(cwd, "")
+        if not path:
+            """ if the specified output path is passed in """
+            destination_dir = os.path.join(cwd, "doc_output")
+        else:
+            """如果传入了指定文件夹路径"""
+            if os.path.exists(path):
+                """ 绝对路径 """
+                destination_dir = path
+            else:
+                """ 相对路径 """
+                destination_dir = os.path.join(cwd, path)
+        # create folder
+        if not os.path.exists(destination_dir):
+            os.mkdir(destination_dir)
+        self.filename = os.path.join(destination_dir, re.sub(r"[/\\]+(.*)", lambda x: x.group(1), file_name)).replace(
+            ".py", ".md")
         self.lng = language
 
     def write(self, content):

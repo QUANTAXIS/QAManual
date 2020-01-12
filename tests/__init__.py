@@ -30,5 +30,5 @@ def example_func(code, source):
 
 if __name__ == '__main__':
     parser = FunctionParser(example_func)
-    writer = MarkdownWriter(parser.union.__name__, parser.get_node(), language="zh")
+    writer = MarkdownWriter(parser.get_node(), language="zh")
     writer.handle()

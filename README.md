@@ -10,7 +10,7 @@ Note that you need to add in the specified format
 - Generate manual documents
 - Command quick search
 
-### Simple Use
+### Developer Usage
 ```python
 from QAManual import FunctionParser
 from QAManual import MarkdownWriter
