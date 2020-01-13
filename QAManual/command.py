@@ -7,7 +7,7 @@ import sys
 import types
 import inspect
 from .writer import MarkdownWriter
-from .bash_parser import FunctionParser
+from .bash_parser import FunctionParser, ClassParser
 
 parser = argparse.ArgumentParser(description="Let's go! Man~")
 parser.add_argument('-init', '--init', help='project initialization command, ;'
@@ -16,6 +16,7 @@ parser.add_argument('-o', '--output', help='output the address of the generated 
                                            'qaman -init . -o /home/somewheve/au .')
 parser.add_argument("-s", '--search', help="Enter keywords, query API, use with project parameters")
 parser.add_argument("-path", '--abspath', help="add absolute search path")
+parser.add_argument("-l", '--language', default="zh", help="specify language")
 parser.add_argument("-p", '--project',
                     help="Incoming project nouns, functions and functions for querying specified projects in projects ")
 
@@ -52,10 +53,18 @@ class QAMan:
                 if inspect.isfunction(v):
                     """ Processing function """
                     parse = FunctionParser(v)
-                    writer = MarkdownWriter(parse.get_node(), cwd, path=args.output, language="zh")
+                    writer = MarkdownWriter(parse.get_node(), cwd, path=args.output, language=args.language)
                     writer.handle()
                 elif inspect.isclass(v):
                     """ Processing class """
+                    try:
+
+                        parse = ClassParser(v)
+                        for x in parse.get_node():
+                            writer = MarkdownWriter(x, cwd, path=args.output, language=args.language)
+                            writer.handle()
+                    except TypeError:
+                        continue
                 else:
                     continue
         print("\n--->执行成功 !!\n")

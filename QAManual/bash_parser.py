@@ -15,20 +15,20 @@ doc_node = namedtuple("code_node", ["name", "code_source", "code_file", "doc"])
 
 class Parser:
 
-    def __init__(self, destination):
-        if isinstance(destination, types.FunctionType):
+    def __init__(self, destination, origin_name=None, ):
+        if inspect.isfunction(destination):
             self.type = "func"
-        if isinstance(destination, types.MethodType):
-            self.type = "class_method"
-
+        if inspect.isclass(destination):
+            self.type = "class"
         self.union = destination
+        self.name = self.union.__name__
+        self.origin_name = origin_name
 
     @property
     def doc(self):
-
-        if len(self.union.__doc__) == 0:
+        if len(self.union.__doc__) == 0 or "QAMAN" not in self.union.__doc__:
             return None
-        return self.union.__doc__
+        return self.union.__doc__.replace("QAMAN", "")
 
     @property
     def code_source(self):
@@ -46,21 +46,41 @@ class Parser:
         """override this method to perform parsing structure"""
         raise NotImplemented
 
-    def get_node(self):
+    def get_node(self) -> doc_node or [doc_node]:
         """get structured data"""
-        return doc_node(name=self.union.__name__, doc=self.parse(), code_source=self.code_source,
-                        code_file=self.code_file)
+        if self.type == "func":
+            if self.origin_name:
+                name = f"{self.origin_name}.{self.union.__name__}"
+            else:
+                name = self.union.__name__
+            print("正在解析 --->", name)
+            return doc_node(name=name, doc=self.parse(),
+                            code_source=self.code_source,
+                            code_file=self.code_file)
+        elif self.type == "class":
+            return self.parse()
 
 
 class FunctionParser(Parser):
 
     def parse(self) -> typing.Mapping or None:
-        return [x for x in self.doc.split("\n\n")]
+        if self.doc:
+            return [x for x in self.doc.split("\n\n")]
+        else:
+            return None
 
 
 class ClassParser(Parser):
     def parse(self):
-        pass
+        """  调用函数进行解析, 返回多个node """
+        result = []
+
+        for x in self.union.__dict__.values():
+            if inspect.isfunction(x):
+                result.append(FunctionParser(x, self.union.__name__).get_node())
+            else:
+                continue
+        return result
 
 
 class ParamsParser:
