@@ -10,7 +10,22 @@ Note that you need to add in the specified format
 - Generate manual documents
 - Command quick search
 
+### Install
+```text
+pip install QAManual
+```
+
+### How to use 
+
+1. cd to the root path of your project 
+2. execute the following command
+```text
+qaman -init .
+```
+
 ### Developer Usage
+Of course you should write `__doc__` as a specific way as the following code
+
 ```python
 from QAManual import FunctionParser
 from QAManual import MarkdownWriter
@@ -18,7 +33,7 @@ from QAManual import MarkdownWriter
 
 def example_func(code, source):
     """
-
+    QAMAN
     explanation:
         此函数用于在ctp和通达信之间来回转换
 
