@@ -1,5 +1,5 @@
 # QAManual
-Python Manual Auto Generate Program,
+Python Manual Auto Generate Program, worked with [QAHelper](https://github.com/QUANTAXIS/QAHelper)
 
 Note that you need to add in the specified format
 
