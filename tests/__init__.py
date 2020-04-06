@@ -1,36 +1,29 @@
+from datetime import datetime
+
 from QAManual import FunctionParser, ClassParser
 from QAManual import MarkdownWriter
-from tests.cccc import example_func
-
-class QA:
-    def example_func(self, code, source):
-        """QAMAN
-        explanation:
-            此函数用于在ctp和通达信之间来回转换
-
-        params:
-            * code ->
-                含义: 测试用例
-                类型: str
-                参数支持: []
-            * source ->
-                含义: 需要转换到的目标
-                类型: List
-                参数支持: ["pytdx", "ctp"]
-
-        demonstrate:
-            example_func("你好", "somewheve")
-
-        output:
-            >>somewheve --> 你好
-        """
-        print(source, "-->", code)
+from QUANTAXIS import QA_fetch_get_exchangerate_min
 
 
+def QA_util_time_now():
+    """
+    explanation:
+         获取下个月第一天的日期
 
+    params:
+        * dt ->:
+            meaning:当天日期
+            type: datetime
+            optional: [null]
 
-if __name__ == '__main__':
-    parser = ClassParser(QA)
-    for x in parser.get_node():
-        writer = MarkdownWriter(x)
-        writer.handle()
+    return:
+        datetime
+
+    demonstrate:
+        Not described
+
+    output:
+        Not described
+    """
+    return datetime.now()
+

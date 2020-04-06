@@ -13,6 +13,26 @@ from QAManual.c import meaning, get_key
 doc_node = namedtuple("code_node", ["name", "code_source", "code_file", "doc"])
 
 
+def spilt_doc(fnc: str):
+    doc = fnc.split("\n")
+    index = []
+    t = 0
+    for x in range(len(doc)):
+        if doc[x] == "":
+            index.append(x)
+        t = x
+    if t != len(doc):
+        index.append(len(doc) - 1)
+    result = []
+    i = 0
+    for temp in index:
+        if temp == 0:
+            continue
+        result.append("\n".join(doc[i:temp]))
+        i = temp
+    return result
+
+
 class Parser:
 
     def __init__(self, destination, origin_name=None, ):
@@ -26,9 +46,9 @@ class Parser:
 
     @property
     def doc(self):
-        if len(self.union.__doc__) == 0 or "QAMAN" not in self.union.__doc__:
+        if not self.union.__doc__ or "explanation" not in self.union.__doc__:
             return None
-        return self.union.__doc__.replace("QAMAN", "")
+        return self.union.__doc__
 
     @property
     def code_source(self):
@@ -53,10 +73,11 @@ class Parser:
                 name = f"{self.origin_name}.{self.union.__name__}"
             else:
                 name = self.union.__name__
-            print("正在解析 --->", name)
+
             return doc_node(name=name, doc=self.parse(),
                             code_source=self.code_source,
-                            code_file=self.code_file)
+                            code_file=self.code_file,
+                            )
         elif self.type == "class":
             return self.parse()
 
@@ -65,7 +86,7 @@ class FunctionParser(Parser):
 
     def parse(self) -> typing.Mapping or None:
         if self.doc:
-            return [x for x in self.doc.split("\n\n")]
+            return spilt_doc(self.doc)
         else:
             return None
 
@@ -105,12 +126,17 @@ class ParamsParser:
                 for val in meaning[self.lng]['level_sec'].values():
                     key = get_key(meaning[self.lng]['level_sec'], val)
                     self.name.add(key)
-                    if val in temp_element:
-                        pattern = re.compile("^\n[\w\W]*" + f"{val}:" + r"[\s]?(.*?)\n")
-                        # Add a newline manually to ensure that the last line can be matched
-                        c = pattern.match(temp_element + "\n")
-                        if c:
-                            result.setdefault(self.attr_name, {})[key] = c.group(1)
+                    for x in temp_element.split("\n"):
+                        if val in x:
+                            result.setdefault(self.attr_name, {})[key] = x.split(":")[1]
+
+                    # if val in temp_element:
+                    #
+                    #     pattern = re.compile("^\n[\w\W]*.{0,1}" + f"{val}:" + r"[\s]?(.*?)\n")
+                    #     print(pattern)
+                    #     # Add a newline manually to ensure that the last line can be matched
+                    #     c = pattern.match(temp_element + "\n")
+
             else:
                 continue
         return result

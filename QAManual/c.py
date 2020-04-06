@@ -10,13 +10,14 @@ meaning = {
                     "params:": "参数",
                     "demonstrate:": "调用示例",
                     "output:": "输出",
-                    "explanation:": "用途"
+                    "explanation:": "用途",
+                    "return": "返回类型",
                 },
             "level_sec":
                 {
                     "meaning": "含义",
                     "type": "类型",
-                    "optional_value": "参数支持"
+                    "optional": "参数支持"
                 },
             "level_mean":
                 {
@@ -24,7 +25,8 @@ meaning = {
                     "explanation": "解释",
                     "output": "示例输出",
                     "demonstrate": "调用示例",
-                    "path": "路径"
+                    "path": "路径",
+                    "return": "返回类型"
                 }
         },
     "en":
@@ -34,13 +36,14 @@ meaning = {
                     "params:": "params",
                     "demonstrate:": "demonstrate",
                     "output:": "output",
-                    "explanation:": "explanation"
+                    "explanation:": "explanation",
+                    "return": "return"
                 },
             "level_sec":
                 {
                     "meaning": "meaning",
                     "type": "type",
-                    "optional_value": "optional_value"
+                    "optional": "optional"
                 },
             "level_mean":
                 {
@@ -48,7 +51,8 @@ meaning = {
                     "explanation": "Explanation",
                     "output": "Example output",
                     "demonstrate": "Call example",
-                    "path": "Path"
+                    "path": "Path",
+                    "return": "Return Type"
                 }
         },
 

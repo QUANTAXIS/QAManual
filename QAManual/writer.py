@@ -36,7 +36,7 @@ class Writer:
         # create folder
         if not os.path.exists(destination_dir):
             os.mkdir(destination_dir)
-        self.filename = os.path.join(destination_dir, re.sub(r"[/\\]+(.*)", lambda x: x.group(1), file_name)).replace(
+        self.filename = os.path.join(destination_dir, os.path.basename(file_name)).replace(
             ".py", ".md")
         self.lng = language
 
@@ -112,16 +112,22 @@ class MarkdownWriter(Writer):
         self.write("> ".join([x + "\n" for x in self.trim(self.doc_result.explanation).split("\n")]) + "\n" + "\n")
 
     def output_writer(self):
+        if not self.doc_result.output:
+            return
         self.write(
             f"{meaning[self.lng]['level_mean']['output']}" + "\n" + "```\n" + self.trim(
                 self.doc_result.output) + "\n```" + "\n")
 
     def demonstrate_writer(self):
+        if not self.doc_result.demonstrate:
+            return
         self.write(f"**{meaning[self.lng]['level_mean']['demonstrate']}**" + "\n" + "```\n" + self.trim(
             self.doc_result.demonstrate) + "\n```" + "\n")
 
     def params_writer(self):
         length = len(self.params.name)
+        if not self.params:
+            return
 
         def generate_header():
             """ generate doc header of the markdown table"""
@@ -138,16 +144,26 @@ class MarkdownWriter(Writer):
         end = "\n" + header + body + "\n"
         self.write(end)
 
+    def return_writer(self):
+        if not self.doc_result.return_type:
+            return
+        self.write(f"**{meaning[self.lng]['level_mean']['return']}**" + "\n" + "```\n" + self.trim(
+            self.doc_result.return_type) + "\n```" + "\n")
+
     def path_writer(self):
+        if not self.node.code_file:
+            return
         self.write(f"{meaning[self.lng]['level_mean']['path']}: `{self.node.code_file}`" + "\n")
 
     def handle(self, code=False):
+
         self.name_writer()
         self.path_writer()
         self.explanation_writer()
         self.params_writer()
         self.demonstrate_writer()
         self.output_writer()
+        self.return_writer()
         if code:
             self.code_writer()
 

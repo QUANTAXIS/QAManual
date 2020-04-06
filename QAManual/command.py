@@ -42,7 +42,7 @@ class QAMan:
         if not os.path.exists(file_path):
             print("\n--->当前路径不存在__init__.py文件,请切换到项目根目录下面执行此命令,或者通过-path参数直接添加 \n--->程序终止!!!\n")
             return
-        with open(file_path, "r+") as f:
+        with open(file_path, "r+", encoding="utf-8") as f:
             d = types.ModuleType("object")
             d.__file__ = f.name
             exec(compile(f.read(), f.name, 'exec'), d.__dict__)
@@ -58,8 +58,9 @@ class QAMan:
                 elif inspect.isclass(v):
                     """ Processing class """
                     try:
-
                         parse = ClassParser(v)
+                        if not parse.doc:
+                            continue
                         for x in parse.get_node():
                             writer = MarkdownWriter(x, cwd, path=args.output, language=args.language)
                             writer.handle()
